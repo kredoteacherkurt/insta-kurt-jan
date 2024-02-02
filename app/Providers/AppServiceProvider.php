@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 use App\Models\User;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,6 +28,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Paginator::useBootstrap(); // add this line
+
+        if(config('app.env') === 'production') {
+            URL::forceScheme('https');
+        }
 
         Gate::define('admin', function ($user) {
             return $user->role_id == User::ADMIN_ROLE_ID;
